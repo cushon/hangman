@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Hangman" default="build">
+
+  <property name="version" value="0.1" />
+  <property name="src" value="src" />
+  <property name="build" value="build" />
+  <property name="dist" value="dist" />
+  <property name="lib" value="lib" />
+
+  <path id="lib.classpath">
+    <fileset dir="${lib}">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <target name="clean">
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+  </target>
+
+  <target name="compile">
+    <tstamp />
+    <mkdir dir="${build}"/>
+    <javac 
+      srcdir="${src}"
+      destdir="${build}"
+      classpathref="lib.classpath"
+      includeantruntime="false">
+      <compilerarg value="-Xlint" />
+    </javac>
+  </target>
+
+  <target name="build" depends="compile">
+    <mkdir dir="${dist}"/>
+    <taskdef name="jarjar"
+      classname="com.tonicsystems.jarjar.JarJarTask"
+      classpath="lib/jarjar-1.2.jar" />
+    <jarjar jarfile="${dist}/Hangman-${version}.jar">
+      <fileset dir="${build}" />
+      <zipfileset src="${lib}/gson-1.6.jar" />
+      <manifest>
+        <attribute name="Main-Class" value="com.cushon.Hangman.HangmanClient"/>
+      </manifest>
+    </jarjar>
+  </target>
+</project>
